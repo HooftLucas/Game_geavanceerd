@@ -1,68 +1,87 @@
 package be.uantwerpen.fti.ei.Entity;
+
+
 import be.uantwerpen.fti.ei.Entity.personage.Player;
 import be.uantwerpen.fti.ei.Game.*;
-import be.uantwerpen.fti.ei.Graphic.CommonGraph;
 
 import java.io.IOException;
 
-import static be.uantwerpen.fti.ei.Game.Game.player;
+
 
 public abstract class Entity {
     /**
      * De beweging wordt overgenomen
      */
-    private static final Movement movement = new Movement();
-
+    private Movement movement = new Movement();
     public double speedX;
-
     public double speedY;
 
     public double width;
 
-    public static double height;
-    int TilesSize = CommonGraph.Getinstance().tileSize;
-    public static boolean onGround = true;
-    public static double WorldX;
+
+    public double height;
+    public boolean onGround = true;
+    public double WorldX;
     public double WorldY; // beginpositie van de map
-
-    private float currentjump;
-
-    private float currentfallspeed = 1;
-    protected Entity() throws IOException{
-
+    public boolean Dead = false;
+    public double Xbullet;
+    public double getWorldX() {
+        return WorldX;
     }
-    public static Movement getMovement(){
+
+    public boolean isOnGround() {
+        return onGround;
+    }
+
+    public void setOnGround(boolean onGround) {
+        this.onGround = onGround;
+    }
+
+    public void setWorldY(double worldY) {
+        WorldY = worldY;
+    }
+
+    public void setWorldX(double worldX) {
+        WorldX = worldX;
+    }
+
+    protected Entity() throws IOException{
+    }
+    public Movement getMovement(){
         return movement;
     }
 
     public void move(String dir, boolean jump, double getmovementY)   {
             if (dir.equals("Right")) {
-                getMovement().setAx((float) speedX);
-                WorldX += getMovement().getAx();
-
+                this.getMovement().setAx((float) this.speedX);
+                WorldX += this.getMovement().getAx();
             }
             if (dir.equals("Left")) {
-
-                getMovement().setAx((float) (-speedX));
-                WorldX += getMovement().getAx();
-
-
+                this.getMovement().setAx((float) (-this.speedX));
+                WorldX += this.getMovement().getAx();
             }
+            if(dir.equals("Fire")){
+                Xbullet = getMovement().getDx() + this.speedX;
+                this.getMovement().setAx((float) Xbullet);
+            }
+
 
             if (jump && dir == "Jump") { //&& !CollisionOn.equals("Collision Up")
                 double getspeedY = 0;
-                while (getspeedY <= speedY) {
+                while (getspeedY <= this.speedY) {
                     getspeedY += 0.1;
-                    getMovement().setDy(getMovement().getDy() - (float) (getspeedY));
+                    this.getMovement().setDy(getMovement().getDy() - (float) (getspeedY));
+                    //System.out.println(this.getMovement().getDy());
+
                 }
             }
             if (!jump && dir == "Down") {
                 double getspeedY = 0;
 
-                System.out.println(getmovementY);
-                while (getspeedY <= speedY) {
+                //System.out.println(getmovementY);
+                while (getspeedY <= this.speedY) {
                     getspeedY += 0.1;
-                    getMovement().setDy(getMovement().getDy() + (float) (getspeedY));
+                    this.getMovement().setDy(getMovement().getDy() + (float) (getspeedY));
                 }
             }
 

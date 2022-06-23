@@ -11,10 +11,10 @@ public final class CommonGame {
     /*
     Dit hebben we nodig om alle instellingen in te lezen en te verwerken
      */
-    private static CommonGame Instance;
+    private static CommonGame INSTANCE;
 
-    public static int gameDimWidth;
-    public static int gameDimHeight;
+    public int gameDimWidth;
+    public int gameDimHeight;
 
     public double speedPlayerx;
     public double speedPlayery;
@@ -30,6 +30,10 @@ public final class CommonGame {
     public static int lives;
     public double WorldX;
     public double WorldY;
+
+    public double speedBullet;
+    public double BulletWidth;
+    public double BulletHeight;
 
     /**
      * Hier maken we de functie van de CommonGame.
@@ -60,14 +64,18 @@ public final class CommonGame {
         this.lives = Integer.parseInt(prop.getProperty("lives"));
         this.WorldX = Double.parseDouble(prop.getProperty("WorldX"));
         this.WorldY = Double.parseDouble(prop.getProperty("WorldY"));
+        //bullet
+        this.speedBullet = Double.parseDouble(prop.getProperty("speedBullet"));
+        this.BulletWidth = Double.parseDouble(prop.getProperty("BulletWidth"));
+        this.BulletHeight = Double.parseDouble(prop.getProperty("BulletHeight"));
     }
 
     public static CommonGame getInstance() throws IOException {
-        if(Instance == null)
+        if(INSTANCE == null)
         {
-            Instance = new CommonGame();
+            INSTANCE = new CommonGame();
         }
-        return Instance;
+        return INSTANCE;
     }
 
 

@@ -63,8 +63,9 @@ public class J2Dinput extends Input {
 
                 case KeyEvent.VK_UP:
                     keyInputs.add(Inputs.Jump);
-
                     break;
+                case KeyEvent.VK_SPACE:
+                    keyInputs.add(Inputs.fire);
             }
         }
         @Override
@@ -84,6 +85,8 @@ public class J2Dinput extends Input {
                     KeyRemovals.add(Inputs.Jump);
 
                     break;
+                case KeyEvent.VK_SPACE:
+                    KeyRemovals.add(Inputs.fire);
             }
         }
     }

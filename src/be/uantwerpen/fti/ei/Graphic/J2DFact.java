@@ -1,6 +1,7 @@
 package be.uantwerpen.fti.ei.Graphic;
 
-import be.uantwerpen.fti.ei.Entity.map.Tiles;
+import be.uantwerpen.fti.ei.Entity.Projectile.Bullet;
+import be.uantwerpen.fti.ei.Entity.personage.Enemy;
 import be.uantwerpen.fti.ei.Entity.personage.Player;
 import be.uantwerpen.fti.ei.Game.*;
 import javax.imageio.ImageIO;
@@ -11,22 +12,23 @@ import java.io.*;
 
 
 public class J2DFact extends AFact {
-    public static int ScreenWidth;
-    public static int ScreenHeight;
+    public int ScreenWidth;
+    public int ScreenHeight;
     private int size;
-
-    public static int GameDimWidth;
-    public static int GameDimHeight;
+    private CommonGraph commonGraph = CommonGraph.Getinstance();
+    public int GameDimWidth;
+    public int GameDimHeight;
     private JFrame frame;
     private JPanel panel;
     private BufferedImage g2dimage;
     private Graphics2D g2dgraph;
     public BufferedImage backgroundimagine;
+    private J2DTile J2DTile;
 
 
     public J2DFact() throws IOException {
-        this.ScreenHeight = CommonGraph.Getinstance().screenHeight;
-        this.ScreenWidth = CommonGraph.Getinstance().screenWidth;
+        this.ScreenHeight = commonGraph.screenHeight;
+        this.ScreenWidth = commonGraph.screenWidth;
 
         frame = new JFrame();
         panel = new JPanel(true){
@@ -80,12 +82,12 @@ public class J2DFact extends AFact {
         return bufferImage;
     }
 
-    public static Coordinate CoordinateConverter(BufferedImage image, float x, float y){
+    public Coordinate CoordinateConverter(BufferedImage image, float x, float y){
         float xPercent = x/ (GameDimWidth);
-        float x_cord = xPercent * ScreenWidth;
+        float x_cord = xPercent * commonGraph.screenWidth;
 
         float yPercent = y/(GameDimHeight);
-        float y_cord = yPercent *ScreenHeight;
+        float y_cord = yPercent *commonGraph.screenHeight;
         //y_cord += (float) (image.getHeight()/10.0);
         return new Coordinate(x_cord, y_cord);
     }
@@ -99,7 +101,7 @@ public class J2DFact extends AFact {
        size = Math.min(ScreenWidth/gameWidth, ScreenHeight/gameheigt);
         frame.setLocation(100,100); //set the location where the game started
         frame.setSize(ScreenWidth, ScreenHeight);
-        backgroundimagine = loadImages("src/Resource/achtergrond.jpeg");
+        backgroundimagine = loadImages("src/Resource/Level1/achtergrond.jpeg");
         try
         {
             backgroundimagine = resizeImage(backgroundimagine,frame.getWidth(), frame.getHeight());
@@ -129,8 +131,20 @@ public class J2DFact extends AFact {
     }
 
     @Override
-    protected Tiles CreateTiles() throws IOException {
-        return new J2DTile(this);
+    protected J2DTile CreateTiles(Player p) throws IOException {
+        return new J2DTile(this,p  );
+    }
+
+
+    @Override
+    protected Enemy createEnemy(Player p) throws IOException {
+        return new J2DEnemy(this, p);
+    }
+
+
+    @Override
+    public Bullet CreateBullet(Player P) throws IOException {
+        return new J2DBullet(this,P);
     }
 
 
@@ -142,8 +156,8 @@ public class J2DFact extends AFact {
 
 }
 class Coordinate {
-    public static float x;
-    public static float y;
+    public float x;
+    public float y;
 
     public Coordinate(float x, float y) {
         this.x = x;
